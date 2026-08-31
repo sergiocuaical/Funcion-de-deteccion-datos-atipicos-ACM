@@ -1,0 +1,18 @@
+La función deteccion_atipicos_acm() identifica observaciones atípicas multivariadas
+a partir de las coordenadas de un ACM ejecutado con FactoMineR::MCA().
+En primer lugar, selecciona las dimensiones H necesarias para alcanzar la inercia acumulada deseada, de momento por defecto
+esta configurada para un 60% de inercia acumulada.
+Luego, calcula el centroide y la matriz de covarianza factorial para estimar la distancia de Mahalanobis de cada individuo. 
+Al evaluar estas distancias frente a un umbral crítico Chi-cuadrado, clasifica los casos en normales o atípicos. 
+Finalmente, devuelve un resumen descriptivo y divide la base original en dos subconjuntos (limpios y atípicos)
+para facilitar su reincorporación como observaciones suplementarias y evitar distorsiones en los planos factoriales.
+
+
+The "deteccion_atipicos_acm()" function identifies multivariate outlier observations
+from the coordinates of an MCA performed with "FactoMineR::MCA()". 
+First, it selects the H dimensions required to reach the desired cumulative inertia,
+which is currently set to a default of 60% cumulative inertia. Then, 
+it calculates the centroid and the factorial covariance matrix to estimate the Mahalanobis distance for each individual.
+By evaluating these distances against a Chi-square critical threshold, it classifies the cases as normal or outliers.
+Finally, it returns a descriptive summary and splits the original dataset into two subsets (clean and outliers)
+to facilitate their reincorporation as supplementary observations and prevent distortions in the factorial planes.
