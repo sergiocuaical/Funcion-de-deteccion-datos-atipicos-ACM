@@ -1,0 +1,134 @@
+La siguiente función creada en R, llamada "Función Boxplot atipicos" permite identificar atipicos 
+mediante el criterio del boxplot. 
+
+La función necesita de que se introduzca el ACM previamente realizado, dado que esta diseñada para detectar datos atipicos
+en el conjunto de coordenadas factoriales del espacio de ACM, más no para diseñarlo previamente.
+Una vez se introduzca las coordenadas factoriales, la función por defecto examina las primeras 5 dimensiones del ACM 
+en caso de que no existan 5 dimensiones en el ACM, se toman todas las disponibles y la función arroja un mensaje de alerta más
+continua su funcionamiento normal. El parámetro que controla las dimensiones en la función esta definido como h, 
+define la cantidad de dimensiones sobre las cuales se evaluara el boxplot en las coordenadas factoriales. 
+
+Clasificando como atipico, el perfil que aparezca como atipico en al menos una de las 5 dimensiones. Dependiendo de la cantidad 
+de datos utilizados, asi como la cantidad de variables, correlación de las variables, etc. Se pretende manipular el tamaño de la 
+caja del boxplot, mediante el parámetro definido como coef_iqr, esto moldea el tamaño del boxplot permitiendo que su tasa
+de falsos positivos y sensibilidad cambien, se debe tener en cuenta que entre más grande sea el tamaño del boxplot menor sera
+la cantidad de datos atipicos detectados. Se recomienda los valores de 1.5, 2 y maximo 2.5 
+
+La función arroja: la cantidad de datos totales, la cantidad de datos atipicos encontrados, el porcentaje de atipicos,
+la cantidad de dimensiones evaluadas y el coeficiente de iqr utilizado. Asi como el individuo que es atipico
+y en que dimensión se identifica como atipico. 
+
+
+| detectar_atipicos_boxplot_acm {Boxplot atipicos} | R Documentation |
+| --- | --- |
+
+## Detección de datos atípicos en coordenadas factoriales mediante Boxplot
+
+### Description
+
+Identifica individuos atípicos en un Análisis de Correspondencias Múltiples (ACM) mediante el criterio del Boxplot aplicado individualmente sobre las coordenadas factoriales.
+
+La función requiere como entrada un ACM previamente realizado. No ejecuta el análisis de correspondencias múltiples, sino que utiliza las coordenadas factoriales de los individuos para realizar la detección.
+
+Por defecto, se evalúan las primeras cinco dimensiones factoriales. Un individuo se clasifica como atípico cuando presenta al menos una coordenada factorial fuera de los límites del Boxplot en cualquiera de las dimensiones evaluadas.
+
+### Usage
+
+```r
+detectar_atipicos_boxplot_acm(
+  res_acm,
+  h = 5,
+  coef_iqr = 1.5
+)
+```
+
+### Arguments
+
+| `res_acm` | |
+| --- | --- |
+
+Objeto correspondiente al resultado de un Análisis de Correspondencias Múltiples previamente ejecutado. También admite una matriz o un `data.frame` que contenga las coordenadas factoriales de los individuos.
+
+| `h` | |
+| --- | --- |
+
+Número de dimensiones factoriales que se utilizarán para la detección de datos atípicos. Por defecto, se consideran las primeras cinco dimensiones. Si el número solicitado supera las dimensiones disponibles, se utilizarán todas las existentes y se generará una advertencia.
+
+| `coef_iqr` | |
+| --- | --- |
+
+Multiplicador del rango intercuartílico (IQR) utilizado para establecer los límites inferior y superior del Boxplot. Su valor predeterminado es 1.5. Valores mayores generan límites más amplios y, generalmente, reducen la cantidad de individuos identificados como atípicos. Se recomienda evaluar valores de 1.5, 2 y 2.5, dependiendo de las características de los datos y del comportamiento de detección deseado.
+
+### Details
+
+Para cada dimensión factorial evaluada, se calculan el primer cuartil (Q1), el tercer cuartil (Q3) y el rango intercuartílico (IQR). Los límites de detección se establecen mediante:
+
+\[
+L_{\mathrm{inf}} = Q_1 - coef\_iqr \times IQR
+\]
+
+\[
+L_{\mathrm{sup}} = Q_3 + coef\_iqr \times IQR
+\]
+
+Un individuo se considera atípico si su coordenada factorial es inferior al límite inferior o superior al límite superior en al menos una de las dimensiones evaluadas. La clasificación global corresponde, por tanto, a una regla de unión entre dimensiones.
+
+La amplitud de los límites puede influir en la sensibilidad y la tasa de falsos positivos del procedimiento. Además, al incrementar el número de dimensiones evaluadas, aumenta la posibilidad de que un individuo sea identificado como atípico en al menos una de ellas.
+
+La función no admite coordenadas factoriales con valores faltantes (`NA` o `NaN`) ni valores infinitos (`Inf` o `-Inf`).
+
+### Value
+
+La función devuelve, de manera invisible, una lista con los siguientes elementos:
+
+| Elemento | Descripción |
+| --- | --- |
+| `resumen` | Data frame con el número total de individuos, cantidad y porcentaje de atípicos, dimensiones evaluadas y multiplicador IQR utilizado. |
+| `ids_atipicos` | Identificadores de los individuos clasificados como atípicos. |
+| `posiciones_atipicos` | Posiciones correspondientes a los individuos atípicos en la matriz original de coordenadas. |
+| `es_atipico_vector` | Vector lógico que indica si cada individuo es atípico (`TRUE`) o no (`FALSE`). |
+| `detalle_por_dimension` | Data frame que contiene exclusivamente los individuos atípicos y las dimensiones en las que fueron identificados. |
+| `limites_dimensiones` | Lista con los límites inferior y superior, Q1 y Q3 calculados para cada dimensión evaluada. |
+
+Adicionalmente, la función imprime en consola un resumen general del procedimiento de detección.
+
+### Examples
+
+```r
+# Cargar paquete
+library(FactoMineR)
+
+# Generar datos de ejemplo
+set.seed(123)
+
+base_encuesta <- data.frame(
+  P1 = factor(sample(1:5, 100, replace = TRUE)),
+  P2 = factor(sample(1:5, 100, replace = TRUE)),
+  P3 = factor(sample(1:5, 100, replace = TRUE)),
+  P4 = factor(sample(1:5, 100, replace = TRUE)),
+  P5 = factor(sample(1:5, 100, replace = TRUE))
+)
+
+# Realizar ACM
+res_acm <- MCA(base_encuesta, graph = FALSE)
+
+# Aplicar función
+resultado <- detectar_atipicos_boxplot_acm(
+  res_acm,
+  h = 5,
+  coef_iqr = 1.5
+)
+
+# Consultar resultados
+resultado$resumen
+resultado$ids_atipicos
+resultado$detalle_por_dimension
+resultado$limites_dimensiones
+```
+
+
+
+
+
+
+
