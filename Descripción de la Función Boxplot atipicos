@@ -1,0 +1,44 @@
+#  Detección de Datos Atípicos Multivariados mediante ACM y Criterio de Boxplot
+
+**Autores:** Sergio Alejandro Florez y Alejandro Agredo Cruz  
+**Lenguaje:** R  
+**Librerías requeridas:** `FactoMineR`, `discFA`, `car`
+
+---
+
+## 📋 Descripción general
+
+Esta función en R permite la **detección automatizada de datos atípicos (outliers)
+en conjuntos de datos multivariados con variables cualitativas**. 
+
+El procedimiento se basa en realizar internamente un **Análisis de Correspondencias Múltiples (ACM)**
+utilizando la librería `FactoMineR`. A partir de las coordenadas factoriales de los individuos en las primeras $h$ dimensiones,
+se aplica una evaluación univariada basada en el **criterio del Boxplot (Rango Intercuartílico - IQR)**. 
+Un individuo es catalogado como atípico global si presenta un comportamiento inusual en **al menos una**
+de las dimensiones evaluadas.
+
+---
+
+## Características principales
+
+- **Conversión automática a factores:** Transforma de manera interna las variables seleccionadas al formato de tipo `factor` exigido por el ACM.
+- **Selección flexible de variables:** Permite elegir explícitamente qué columnas incluir (`vars`) o cuáles omitir (`excluir_vars`).
+- **Evaluación multidimensional:** Configurable mediante el número de dimensiones factoriales ($h$) y el factor multiplicativo del IQR ($c$).
+- **Salida modular:** Ofrece un reporte claro en consola y una lista estructurada con los IDs de los atípicos, detalles por dimensión, límites calculados y la opción de retornar el objeto completo del ACM (`incluir_acm = TRUE`).
+
+---
+
+##  Instalación y Paquetes Requeridos
+
+Antes de utilizar la función, asegúrate de tener instaladas y cargadas las siguientes librerías en tu entorno de R:
+
+```R
+# Instalar paquetes si no los tienes en tu entorno
+install.packages("FactoMineR")
+install.packages("discFA")
+install.packages("car")
+
+# Cargar librerías
+library(FactoMineR)
+library(discFA)
+library(car)
