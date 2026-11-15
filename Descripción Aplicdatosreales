@@ -1,0 +1,24 @@
+# 📊 Caso de Aplicación Práctica: Detección y Proyección de Atípicos en ACM (`car_data`)
+
+**Autores:** Sergio Alejandro Florez y Alejandro Agredo Cruz  
+**Lenguaje:** R  
+
+El siguiente es un caso de Aplicación con la idea de que se entienda un poco
+como funciona la detección y proyección de datos atipicos
+
+---
+
+## 🎯 Objetivo del Ejemplo de Aplicación
+
+Este script demuestra un flujo de trabajo completo de Análisis de Correspondencias Múltiples (ACM) 
+aplicado al conjunto de datos `car_data` de la libreria car.
+
+El caso de estudio aborda tres fases fundamentales:
+1. **Diagnóstico inicial:** Evaluación del ACM con la presencia de datos atípicos y análisis de su impacto en la inercia retenida.
+2. **Depuración:** Identificación y separación de observaciones atípicas.
+3. **Proyección robusta:** Reconstrucción del espacio factorial sin atípicos y proyección de estos últimos como 
+individuos suplementarios mediante la función especializada `coord_atipicos_sup_acm()`, 
+resolviendo el problema de las modalidades exclusivas o no soportadas.
+
+---
+
