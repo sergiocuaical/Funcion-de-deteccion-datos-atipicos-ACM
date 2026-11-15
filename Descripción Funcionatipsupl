@@ -1,0 +1,40 @@
+# Proyección de Individuos Atípicos como Suplementarios en un ACM (`coord_atipicos_sup_acm`)
+
+**Autores:** Sergio Alejandro Florez y Alejandro Agredo Cruz  
+**Lenguaje:** R  
+**Librerías requeridas:** `FactoMineR`
+
+---
+
+## Motivación y Problema que Resuelve
+
+Cuando realizamos un **Análisis de Correspondencias Múltiples (ACM)** y eliminamos individuos atípicos 
+(por ejemplo, mediante criterios de boxplot multivariado) para recalcular el plano factorial con una base "activa" limpia,
+surge un problema metodológico común al intentar proyectar dichos atípicos como **individuos suplementarios**:
+
+El problema de la modalidad exclusiva: Supongamos que un individuo atípico seleccionó la categoría `5` en la variable `XXX`,
+y **ningún otro individuo en la base activa** volvió a elegir esa misma categoría.
+Al recalcular el ACM sin los atípicos, esa modalidad `5` se queda sin frecuencias (suma cero),
+por lo que desaparece de las coordenadas del ACM activo (`res$var$coord`).
+Si intentamos usar la función nativa `MCA(..., ind.sup = ...)`, 
+R arrojará un error porque la categoría del individuo no existe en el espacio activo.
+
+## ¿Cómo lo soluciona esta función?
+`coord_atipicos_sup_acm()` implementa la **fórmula de transición teórica** de los análisis factoriales,
+permitiendo proyectar a los individuos atípicos utilizando 
+únicamente las modalidades que SÍ están presentes y soportadas
+en el ACM activo, omitiendo de forma matemática aquellas categorías únicas o exclusivas del individuo atípico 
+sin romper la ejecución.
+
+---
+
+## Fundamento Teórico (Fórmula)
+
+La coordenada $F_{is}$ de un individuo suplementario $i$ en la dimensión $s$ se calcula mediante:
+
+$$F_{is} = \frac{\sum_{k \in \text{disponibles}} G_{ks}}{Q_i \times \sqrt{\lambda_s}}$$
+
+Donde:
+- $G_{ks}$: Coordenada de la modalidad $k$ en el eje $s$ (obtenida de `res$var$coord`).
+- $\lambda_s$: Autovalor (eigenvalor) del eje $s$ (`res$eig[, 1]`).
+- $Q_i$: Número de modalidades válidas o disponibles del individuo $i$ que **sí** tienen soporte en el espacio activo.
