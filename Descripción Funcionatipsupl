@@ -28,13 +28,8 @@ sin romper la ejecución.
 
 ---
 
-## Fundamento Teórico (Fórmula)
-
-La coordenada $F_{is}$ de un individuo suplementario $i$ en la dimensión $s$ se calcula mediante:
-
-$$F_{is} = \frac{\sum_{k \in \text{disponibles}} G_{ks}}{Q_i \times \sqrt{\lambda_s}}$$
-
-Donde:
-- $G_{ks}$: Coordenada de la modalidad $k$ en el eje $s$ (obtenida de `res$var$coord`).
-- $\lambda_s$: Autovalor (eigenvalor) del eje $s$ (`res$eig[, 1]`).
-- $Q_i$: Número de modalidades válidas o disponibles del individuo $i$ que **sí** tienen soporte en el espacio activo.
+# Fórmula:
+#   F_is = ( sum_{k disponibles} G_ks ) / ( Q_i * sqrt(lambda_s) )
+#   con G_ks = coordenada de la modalidad k en el eje s (res$var$coord),
+#   lambda_s = autovalor del eje s (res$eig[, 1], sin corregir) y
+#   Q_i = número de modalidades disponibles del individuo i.
